@@ -1,0 +1,103 @@
+/* 全体を画面いっぱいに */
+.layout {
+  display: flex;
+  height: 100vh;
+}
+
+/* 左パネル：幅固定 */
+.left-panel {
+  flex: 1;   /* 300px固定 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* 画像サイズ */
+#gal-img {
+  width: 90%;
+  max-width: 390px;
+  height: auto;
+  margin-bottom: 0.5rem;
+}
+
+/* メーター */
+#gyarumind-meter {
+  width: 80%;                  /* 左パネル幅の80% */
+  max-width: 300px;
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #e91e63;
+  background: #ffeef5;
+  padding: 0.4rem 0;
+  border-radius: 0.4rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* 右パネル：縦方向に並べてスクロール可能に */
+.right-panel {
+  flex: 1;                   
+  display: flex;
+  flex-direction: column;
+  min-width: 0;              /* 子要素の幅縮小を許可 */
+}
+
+/* チャット表示部分 */
+.chat-area {
+  flex: 1;                   /* 上下で伸縮 */
+  padding: 1rem;
+  overflow-y: auto;          /* スクロール有効 */
+  min-width: 0;              /* 横にはみ出させない */
+}
+
+/* 入力フォーム部分 */
+.input-area {
+  display: flex;
+  border-top: 1px solid #ffd5e5;
+}
+
+.input-area input {
+  flex: 1;
+  padding: 0.8rem;
+  border: none;
+  font-size: 1rem;
+}
+
+.input-area button {
+  padding: 0 1.2rem;
+  background: #ff9bb3;
+  border: none;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* チャットバブルのレイアウト再定義 */
+.chat-area {
+  display: flex;
+  flex-direction: column;   /* これがないと縦に積まれません */
+  gap: 0.5rem;              /* バブル同士の隙間 */
+}
+
+/* バブル共通スタイル */
+.bubble {
+  max-width: 80%;
+  padding: 0.6rem 0.9rem;
+  border-radius: 1rem;
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
+
+/* ユーザー発言バブル */
+.bubble.user {
+  background: #f0f0f0;
+  align-self: flex-end;
+}
+
+/* ギャル発言バブル */
+.bubble.gal {
+  background: #ffcee0;
+  align-self: flex-start;
+}

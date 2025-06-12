@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>ギャルとチャットしよ💖</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script defer src="{{ url_for('static', filename='script.js') }}"></script>
+</head>
+<body>
+  <div class="layout">
+    <!-- 左：ギャル画像 -->
+    <!-- 左：ギャル画像＋マイン度 -->
+  <div class="left-panel">
+    <img id="gal-img" src="{{ url_for('static', filename='gal_sample.png') }}" alt="ギャルちゃん">
+    <div id="gyarumind-meter">
+      ギャルマイン度：<span id="gm-score">--</span>/50💖
+    </div>
+  </div>
+
+
+    <!-- 右：チャットエリア -->
+    <div class="right-panel">
+      <div id="chat-area" class="chat-area"></div>
+
+      <form id="chat-form" class="input-area">
+        <input id="message" type="text" autocomplete="off"
+               placeholder="メッセージを入力…" />
+        <button type="submit">送信💖</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
