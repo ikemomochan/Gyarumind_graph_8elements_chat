@@ -48,13 +48,13 @@ document.addEventListener("DOMContentLoaded", () => {
         body: JSON.stringify({ message: text }),
       });
       const data = await res.json();
-
       loadingBubble.remove();
       addBubble(data.answer, "gal");
 
       // ギャルマイン度が返ってきたら表示を更新
       if (data.gyarumind !== undefined && data.gyarumind !== null) {
         updateGyarumind(data.gyarumind);
+        updateChart(data.score_history);    // ← グラフ更新
       }
     } catch (err) {
       loadingBubble.remove();
@@ -64,3 +64,42 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+let gmChart = null;
+
+function updateChart(scoreHistory) {
+  console.log("グラフ用データ:", scoreHistory);  // ← ここ！
+  const ctx = document.getElementById("gm-chart").getContext("2d");
+
+  // 初回 or 更新のたびにグラフを破棄して描き直す
+  if (gmChart) {
+    gmChart.destroy();
+  }
+
+  gmChart = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: scoreHistory.map((_, i) => `#${(i + 1) * 5}`),
+      datasets: [{
+        label: "ギャルマイン度📈",
+        data: scoreHistory,
+        borderColor: "#e91e63",
+        backgroundColor: "#ffeef5",
+        tension: 0.3,
+        pointRadius: 5,
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          min: 0,
+          max: 50
+        }
+      },
+      responsive: true,
+      plugins: {
+        legend: { display: false }
+      }
+    }
+  });
+}

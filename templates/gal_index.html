@@ -5,17 +5,21 @@
   <title>ギャルとチャットしよ💖</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <script defer src="{{ url_for('static', filename='script.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="layout">
     <!-- 左：ギャル画像 -->
     <!-- 左：ギャル画像＋マイン度 -->
   <div class="left-panel">
-    <img id="gal-img" src="{{ url_for('static', filename='gal_sample.png') }}" alt="ギャルちゃん">
-    <div id="gyarumind-meter">
-      ギャルマイン度：<span id="gm-score">--</span>/50💖
-    </div>
+  <img id="gal-img" src="/static/gal_sample.png" alt="ギャルAI">
+  <div id="gyarumind-meter">ギャルマイン度：<span id="gm-score">--</span>/50💖</div>
+  <div id="gm-chart-container">
+    <h3 style="margin-bottom: 0.5rem;">ギャルマイン度の変化📈</h3>
+    <canvas id="gm-chart" width="300" height="180"></canvas>
   </div>
+</div>
+
 
 
     <!-- 右：チャットエリア -->
