@@ -9,29 +9,53 @@
 </head>
 <body>
   <div class="layout">
-    <!-- 左：ギャル画像 -->
-    <!-- 左：ギャル画像＋マイン度 -->
-  <div class="left-panel">
-  <img id="gal-img" src="/static/gal_sample.png" alt="ギャルAI">
-  <div id="gyarumind-meter">ギャルマイン度：<span id="gm-score">--</span>/50💖</div>
-  <div id="gm-chart-container">
-    <h3 style="margin-bottom: 0.5rem;">ギャルマイン度の変化📈</h3>
-    <canvas id="gm-chart" width="300" height="180"></canvas>
-  </div>
-</div>
+    <!-- 左：ギャル画像とギャルマイン度 -->
+    <div class="left-panel">
+      <img id="gal-img" src="/static/gal_sample.png" alt="ギャルAI">
+      <div id="gyarumind-meter">
+        ギャルマイン度：<span id="gm-score">--</span>/50💖
+      </div>
+      <div id="gm-chart-container">
+        <h3 style="margin-bottom: 0.5rem;">ギャルマイン度の変化📈</h3>
 
+        <!-- タブ切り替え -->
+        <div class="tab-buttons">
+          <button id="tab-chart" class="active">📈 推移</button>
+          <button id="tab-detail">📋 内訳</button>
+        </div>
 
+        <!-- グラフ -->
+        <div id="chart-view">
+          <canvas id="gm-chart" width="300" height="180"></canvas>
+        </div>
+
+        <!-- 各項目テーブル -->
+        <div id="detail-view" style="display: none;">
+          <div id="detail-nav">
+            <button id="prev-detail">←</button>
+            <span id="detail-index">#--</span>
+            <button id="next-detail">→</button>
+          </div>
+          <table id="gyarumind-detail-table"></table>
+        </div>
+
+        <div id="gyarumind-average">平均ギャルマイン度：--/50💖</div>
+        <div id="trend-message" class="trend-message">変化メッセージ表示予定💖</div>
+      </div>
+    </div>
 
     <!-- 右：チャットエリア -->
     <div class="right-panel">
       <div id="chat-area" class="chat-area"></div>
-
       <form id="chat-form" class="input-area">
-        <input id="message" type="text" autocomplete="off"
-               placeholder="メッセージを入力…" />
+        <input id="message" type="text" autocomplete="off" placeholder="メッセージを入力…" />
         <button type="submit">送信💖</button>
       </form>
     </div>
   </div>
+  </div> <!-- layoutの閉じタグ -->
+
 </body>
 </html>
+
+

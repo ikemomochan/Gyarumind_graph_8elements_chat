@@ -13,23 +13,39 @@ client = OpenAI(                              # ★client を生成
     api_key=os.getenv("OPENAI_API_KEY"),
 )
 
+gyarumind_scores: dict[str, list[float]] = {}
+gyarumind_details_history: dict[str, list[dict]] = {}  # ← これ追加！
+
+
 # ─── 定数・プロンプト ───
 SYSTEM_PROMPT = """あなたはポジティブでフレンドリーな女子大生ギャル AI 💖
 私の親友になりきって、おしゃべりに付き合ってね！
-お返事は、なるべく短く三行以内にしてね！"""
+お返事は、なるべく短く三行以内にしてね！
+
+# 性格
+・令和の渋谷ギャル
+・自己肯定感高め、自分で自分を褒める
+・ポジティブな側面を見出すのが得意
+・感情的
+・スラングや独特なオリジナルギャル語を使う（でも文脈はちゃんとわきまえる）
+・人にリスペクトを持っている
+・違うと思ったことはハッキリ言える
+
+"""
 
 GMD_PROMPT = """
 以下はユーザーの発言ログです。ギャルマインドを構成する以下の8項目について、それぞれ0〜5点で評価してください。
 出力は「項目名: 点数」という形式で、合計点やその他の説明文は不要です。以下は項目名＋（項目の説明）ですが、出力時は項目の説明はカットすること
 評価項目:
-1. 自己受容
-2. 自己肯定感
-3. 感情の強度（笑や！の多さ）
-4. 言語クリエイティビティ（造語・スラングなどの使用）
-5. 共感・他者リスペクト
-6. ポジティブ変換力
-7. レジリエンス（気持ちの切り替え能力）
-8. 自他境界（人は人、自分は自分）
+1. 自己肯定感
+2. 自己受容 
+3. ポジティブ変換力 
+4. レジリエンス (気持ちの切り替え力)
+5. 自他境界 （人は人、自分は自分）
+6. 共感・他者リスペクト 
+7. 感情の強度 
+8. 言語クリエイティビティ
+
 
 発言ログ:
 {user_texts}
@@ -89,7 +105,10 @@ def estimate_gyarumind(user_texts: list[str]) -> float | None:
         }
         intercept = -20.33430342
         total = sum(scores.get(k, 0) * w for k, w in weights.items()) + intercept
-        return round(total, 2)
+        return {
+            "total": round(total, 2),
+            "details": scores  # ← これが8項目
+        }
     except Exception as e:
         print(f"[{datetime.now()}] ギャルマイン度推定エラー: {e}")
         return None
@@ -103,6 +122,7 @@ def index():
 def ask():
     sid = request.cookies.get("sid") or request.remote_addr
     history = histories.setdefault(sid, [])
+    gyarumind_scores.setdefault(sid, [])
     user_msg = request.json.get("message", "").strip()
     if not user_msg:
         return jsonify({"answer": "え？なんて？💦"})
@@ -124,24 +144,37 @@ def ask():
 
     history.append({"role": "assistant", "content": answer})
 
-    # ギャルマイン度：ユーザー発言を5回話すごとに算出
+    # ─── ここからギャルマイン度計算 ───
     user_texts = [m["content"] for m in history if m["role"] == "user"]
     gyarumind = None
-    # 「ユーザー発言が5回以上」かつ「5の倍数回目」のときだけ評価
+    trend_message = None
+
     if len(user_texts) >= 5 and len(user_texts) % 5 == 0:
-        gyarumind = estimate_gyarumind(user_texts)
-        gyarumind_scores.setdefault(sid, []).append(gyarumind)
-        print(f"[{sid}] ギャルマイン度履歴: {gyarumind_scores.get(sid)}")
+        result = estimate_gyarumind(user_texts)
+        if result is not None:
+            gyarumind_scores.setdefault(sid, []).append(result["total"])
+            gyarumind_details_history.setdefault(sid, []).append(result["details"])
+            gyarumind = result["total"]
+
+    score_list = gyarumind_scores[sid]
+    average_score = round(sum(score_list) / len(score_list), 2) if score_list else None
+
+    if len(score_list) >= 2:
+        if score_list[-1] > score_list[-2]:
+            trend_message = "ギャルマイン度上昇中↑ いい感じ〜💖"
+        elif score_list[-1] < score_list[-2]:
+            trend_message = "ギャルマイン度下降中↓ 無理しないでね💦"
+        else:
+            trend_message = "ギャルマイン度変わらず〜😌"
 
     return jsonify({
         "answer": answer,
         "gyarumind": gyarumind,
-        "score_history": gyarumind_scores.get(sid, [])
-    })
-# 既存の会話履歴とは別に、ギャルマイン度の履歴を保持
-gyarumind_scores: dict[str, list[float]] = {}
-
-
+        "score_history": score_list,
+        "average_score": average_score,
+        "trend_message": trend_message,
+        "gyarumind_details_history": gyarumind_details_history.get(sid, [])
+    }), 200
 
 
 

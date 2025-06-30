@@ -118,3 +118,49 @@
   background: #ffcee0;
   align-self: flex-start;
 }
+
+.trend-message {
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
+  text-align: center;
+  color: #c2185b;
+  font-weight: bold;
+}
+
+#gyarumind-average {
+  margin-top: 0.3rem;
+  font-size: 1.2rem;
+  text-align: center;
+  color: #ba1b5d;
+  font-weight: bold;
+}
+
+#gyarumind-detail-table td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #ffc5d9;
+}
+
+#gyarumind-detail-table td:first-child {
+  font-weight: bold;
+  color: #c2185b;
+}
+
+.tab-buttons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.tab-buttons button {
+  padding: 4px 10px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  background-color: #ffd8e8;
+  cursor: pointer;
+}
+
+.tab-buttons button.active {
+  background-color: #e91e63;
+  color: white;
+}
